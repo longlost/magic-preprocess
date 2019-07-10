@@ -1,0 +1,27 @@
+{
+  "name": "@spriteful/magic-preprocess",
+  "version": "1.0.0",
+  "description": "augment magic card images for use with node-tfjs-retrain",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spriteful/magic-preprocess.git"
+  },
+  "author": "Spriteful spritefuldev@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spriteful/magic-preprocess/issues"
+  },
+  "homepage": "https://github.com/spriteful/magic-preprocess#readme",
+  "dependencies": {
+    "esm": "^3.2.25",
+    "hasard": "^1.5.0",
+    "image-augment": "^1.1.1",
+    "minimist": "^1.2.0",
+    "opencv4nodejs": "^5.1.0",
+    "sharp": "^0.22.1"
+  }
+}
