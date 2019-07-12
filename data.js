@@ -23,6 +23,11 @@ import IA 	 from 'image-augment';
 // TODO:
 // 			save clipper to disk
 
+// TODO:
+// 			speed up performance with child processes (worker threads)
+
+
+
 // custom clip image that crops the white corners
 // from each card photo
 // this gets saved in memory during processing of first image
@@ -61,6 +66,18 @@ const randomCameraAugmentation = ia.sequential([
 ]);
 
 
+
+const makeOneKPaths = paths => {
+	const fill = array => {
+		if (array.length >= 1000) {
+			return array.slice(0, 1000);
+		}
+		return fill([...array, ...paths]);
+	};
+	return fill([]);
+};
+
+
 const getAllPaths = async (imgsDir, directories) => {	
 	// get all filenames from each sub directory
 	const pathPromises = directories.map(dir => {
@@ -71,8 +88,11 @@ const getAllPaths = async (imgsDir, directories) => {
   const pathArrays = await Promise.all(pathPromises);
   // match filenames with directories to get full paths for each file
   const paths = directories.reduce((accum, dir, index) => {
-  	const filePaths = pathArrays[index].map(filePath => path.join(imgsDir, dir, filePath));
-  	accum[dir] = filePaths;
+  	const filePaths = pathArrays[index].map(filePath => 
+  											path.join(imgsDir, dir, filePath));
+  	// we want 1000 images of each set, so fill array until it does
+  	const kilo = makeOneKPaths(filePaths);
+  	accum[dir] = kilo;
   	return accum;
   }, {});
 
@@ -194,14 +214,17 @@ const process = async (imgsDir, outDir) => {
 	for (const directory of directories) {
 		console.log('set: ', directory);
 		const filenames = readPaths[directory];
+		let index = 0; // to make unique names for repeats
 		for (const filename of filenames) {	
 			const clipped		= await clipImage(filename);
 			const randomPos = await randomPositionCam(clipped);
 			const data 			= await addBackground(randomPos);
 			const outSubDir = path.join(outDir, directory);
-			const outPath 	= path.join(outSubDir, path.basename(filename));
+			const newName 	= `${index}-${path.basename(filename)}`;
+			const outPath 	= path.join(outSubDir, newName);
 			await fs.promises.mkdir(outSubDir, {recursive: true});
 			await fs.promises.writeFile(outPath, data);
+			index += 1;
 		}
 	}
 
