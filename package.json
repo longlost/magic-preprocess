@@ -1,6 +1,6 @@
 {
   "name": "@spriteful/magic-preprocess",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "augment magic card images for use with node-tfjs-retrain",
   "main": "index.js",
   "scripts": {
