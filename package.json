@@ -22,6 +22,6 @@
     "image-augment": "^1.1.1",
     "minimist": "^1.2.0",
     "opencv4nodejs": "^5.4.0",
-    "sharp": "^0.22.1"
+    "sharp": "^0.30.5"
   }
 }
